@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BookOpen, RefreshCw, ChevronLeft, ChevronRight, Shuffle, Check, Moon, Sun, Filter, Search } from 'lucide-react';
+import { BookOpen, RefreshCw, ChevronLeft, ChevronRight, Shuffle, Check, Moon, Sun, Filter, Search, SendToBack, ArrowLeft, MoveLeft, ArrowLeftCircle } from 'lucide-react';
 import data from './ai_qa_json.json';
 
 const qaData = data;
@@ -156,7 +156,7 @@ const App = () => {
             onClick={() => setMode('menu')}
             className={`px-4 py-2 ${darkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-700'} rounded-lg shadow hover:shadow-md transition-all font-medium`}
           >
-            ←
+            <MoveLeft />
           </button>
           
           <div className="flex gap-2">
@@ -357,7 +357,7 @@ const App = () => {
             onClick={() => setMode('menu')}
             className={`px-4 py-2 ${darkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-700'} rounded-lg shadow hover:shadow-md transition-all font-medium`}
           >
-            ←
+            <MoveLeft />
           </button>
           <h2 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-indigo-900'}`}>Revision Mode</h2>
           <button
