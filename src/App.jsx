@@ -18,8 +18,14 @@ import pdata from "./exam_probability_analysis.json";
 
 // Mock data - replace with your actual imports
 const qaData = data;
-
 const pData = pdata;
+
+const STORAGE_KEYS = {
+  MASTERED: "ai_mastered_questions",
+  MODE: "ai_app_mode",
+  DARK: "ai_dark_mode",
+};
+
 
 const App = () => {
   const [mode, setMode] = useState("menu");
@@ -28,10 +34,39 @@ const App = () => {
   const [shuffled, setShuffled] = useState(false);
   const [questions, setQuestions] = useState(qaData.qaBank);
   const [masteredQuestions, setMasteredQuestions] = useState(new Set());
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+  const saved = localStorage.getItem(STORAGE_KEYS.DARK);
+  return saved === "true";
+});
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTag, setSelectedTag] = useState("all");
   const [showOnlyUnmastered, setShowOnlyUnmastered] = useState(false);
+
+  useEffect(() => {
+    // Load mastered questions
+    const savedMastered = localStorage.getItem(STORAGE_KEYS.MASTERED);
+    if (savedMastered) {
+      setMasteredQuestions(new Set(JSON.parse(savedMastered)));
+    }
+
+    // Load mode
+    const savedMode = localStorage.getItem(STORAGE_KEYS.MODE);
+    if (savedMode) {
+      setMode(savedMode);
+    }
+
+  }, []);
+
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.MODE, mode);
+  }, [mode]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.DARK, darkMode);
+  }, [darkMode]);
+
 
   // Get all unique tags
   const allTags = ["all", ...new Set(qaData.qaBank.flatMap((q) => q.tags))];
@@ -101,19 +136,25 @@ const App = () => {
 
   const toggleMastered = (id) => {
     const newMastered = new Set(masteredQuestions);
+
     if (newMastered.has(id)) {
       newMastered.delete(id);
     } else {
       newMastered.add(id);
     }
+
     setMasteredQuestions(newMastered);
+    localStorage.setItem(
+      STORAGE_KEYS.MASTERED,
+      JSON.stringify([...newMastered])
+    );
   };
 
   const renderMenu = () => (
     <div
       className={`min-h-screen ${darkMode
-          ? "bg-gradient-to-br from-gray-900 to-gray-800"
-          : "bg-gradient-to-br from-blue-50 to-indigo-100"
+        ? "bg-gradient-to-br from-gray-900 to-gray-800"
+        : "bg-gradient-to-br from-blue-50 to-indigo-100"
         } flex items-center justify-center p-4 pb-6`}
     >
       <div className="fixed bottom-0 right-4 text-sm text-gray-500">
@@ -125,8 +166,8 @@ const App = () => {
           <button
             onClick={() => setDarkMode(!darkMode)}
             className={`p-3 rounded-full ${darkMode
-                ? "bg-gray-700 text-yellow-400"
-                : "bg-white text-indigo-600"
+              ? "bg-gray-700 text-yellow-400"
+              : "bg-white text-indigo-600"
               } shadow-lg hover:shadow-xl transition-all`}
           >
             {darkMode ? (
@@ -268,8 +309,8 @@ const App = () => {
   const renderFlashcard = () => (
     <div
       className={`min-h-screen ${darkMode
-          ? "bg-gradient-to-br from-gray-900 to-gray-800"
-          : "bg-gradient-to-br from-blue-50 to-indigo-100"
+        ? "bg-gradient-to-br from-gray-900 to-gray-800"
+        : "bg-gradient-to-br from-blue-50 to-indigo-100"
         } p-4`}
     >
       <div className="max-w-4xl mx-auto py-8">
@@ -287,8 +328,8 @@ const App = () => {
               <button
                 onClick={resetOrder}
                 className={`px-4 py-2 ${darkMode
-                    ? "bg-gray-800 text-gray-200"
-                    : "bg-white text-gray-700"
+                  ? "bg-gray-800 text-gray-200"
+                  : "bg-white text-gray-700"
                   } rounded-lg shadow hover:shadow-md transition-all font-medium flex items-center gap-2`}
               >
                 <RefreshCw className="w-4 h-4" />
@@ -298,8 +339,8 @@ const App = () => {
               <button
                 onClick={shuffleQuestions}
                 className={`px-4 py-2 ${darkMode
-                    ? "bg-gray-800 text-gray-200"
-                    : "bg-white text-gray-700"
+                  ? "bg-gray-800 text-gray-200"
+                  : "bg-white text-gray-700"
                   } rounded-lg shadow hover:shadow-md transition-all font-medium flex items-center gap-2`}
               >
                 <Shuffle className="w-4 h-4" />
@@ -310,8 +351,8 @@ const App = () => {
             <button
               onClick={() => setDarkMode(!darkMode)}
               className={`p-2 rounded-lg ${darkMode
-                  ? "bg-gray-800 text-yellow-400"
-                  : "bg-white text-indigo-600"
+                ? "bg-gray-800 text-yellow-400"
+                : "bg-white text-indigo-600"
                 } shadow hover:shadow-md transition-all`}
             >
               {darkMode ? (
@@ -336,8 +377,8 @@ const App = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className={`w-full pl-10 pr-4 py-2 ${darkMode
-                    ? "bg-gray-700 text-white border-gray-600"
-                    : "bg-gray-50 border-gray-200"
+                  ? "bg-gray-700 text-white border-gray-600"
+                  : "bg-gray-50 border-gray-200"
                   } border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500`}
               />
             </div>
@@ -346,8 +387,8 @@ const App = () => {
                 value={selectedTag}
                 onChange={(e) => setSelectedTag(e.target.value)}
                 className={`px-4 py-2 ${darkMode
-                    ? "bg-gray-700 text-white border-gray-600"
-                    : "bg-gray-50 border-gray-200"
+                  ? "bg-gray-700 text-white border-gray-600"
+                  : "bg-gray-50 border-gray-200"
                   } border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500`}
               >
                 {allTags.map((tag) => (
@@ -359,10 +400,10 @@ const App = () => {
               <button
                 onClick={() => setShowOnlyUnmastered(!showOnlyUnmastered)}
                 className={`px-4 py-2 rounded-lg transition-all ${showOnlyUnmastered
-                    ? "bg-indigo-600 text-white"
-                    : darkMode
-                      ? "bg-gray-700 text-gray-200"
-                      : "bg-gray-50 text-gray-700"
+                  ? "bg-indigo-600 text-white"
+                  : darkMode
+                    ? "bg-gray-700 text-gray-200"
+                    : "bg-gray-50 text-gray-700"
                   }`}
               >
                 <Filter className="w-4 h-4" />
@@ -392,8 +433,8 @@ const App = () => {
                   <div className="flex justify-between items-start mb-4">
                     <span
                       className={`text-xs font-semibold ${darkMode
-                          ? "text-indigo-400 bg-indigo-900"
-                          : "text-indigo-600 bg-indigo-100"
+                        ? "text-indigo-400 bg-indigo-900"
+                        : "text-indigo-600 bg-indigo-100"
                         } px-3 py-1 rounded-full`}
                     >
                       Q{currentQuestion.id}
@@ -404,12 +445,12 @@ const App = () => {
                         toggleMastered(currentQuestion.id);
                       }}
                       className={`p-2 rounded-full transition-all ${masteredQuestions.has(currentQuestion.id)
-                          ? darkMode
-                            ? "bg-green-900 text-green-400"
-                            : "bg-green-100 text-green-600"
-                          : darkMode
-                            ? "bg-gray-700 text-gray-400 hover:bg-gray-600"
-                            : "bg-gray-100 text-gray-400 hover:bg-gray-200"
+                        ? darkMode
+                          ? "bg-green-900 text-green-400"
+                          : "bg-green-100 text-green-600"
+                        : darkMode
+                          ? "bg-gray-700 text-gray-400 hover:bg-gray-600"
+                          : "bg-gray-100 text-gray-400 hover:bg-gray-200"
                         }`}
                     >
                       <Check className="w-5 h-5" />
@@ -429,8 +470,8 @@ const App = () => {
                           <span
                             key={idx}
                             className={`text-xs ${darkMode
-                                ? "bg-gray-700 text-gray-300"
-                                : "bg-gray-100 text-gray-600"
+                              ? "bg-gray-700 text-gray-300"
+                              : "bg-gray-100 text-gray-600"
                               } px-3 py-1 rounded-full`}
                           >
                             {tag}
@@ -471,12 +512,12 @@ const App = () => {
                 onClick={prevQuestion}
                 disabled={currentIndex === 0}
                 className={`px-3 py-3 rounded-lg font-medium flex items-center gap-2 transition-all ${currentIndex === 0
-                    ? darkMode
-                      ? "bg-gray-700 text-gray-500 cursor-not-allowed"
-                      : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                    : darkMode
-                      ? "bg-gray-800 text-gray-200 shadow hover:shadow-md"
-                      : "bg-white text-gray-700 shadow hover:shadow-md"
+                  ? darkMode
+                    ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  : darkMode
+                    ? "bg-gray-800 text-gray-200 shadow hover:shadow-md"
+                    : "bg-white text-gray-700 shadow hover:shadow-md"
                   }`}
               >
                 <ChevronLeft className="w-5 h-5" />
@@ -495,14 +536,14 @@ const App = () => {
                           setShowAnswer(false);
                         }}
                         className={`w-10 h-10 rounded-lg font-medium transition-all ${actualIndex === currentIndex
-                            ? "bg-indigo-600 text-white shadow-lg"
-                            : masteredQuestions.has(q.id)
-                              ? darkMode
-                                ? "bg-green-900 text-green-400 hover:bg-green-800"
-                                : "bg-green-100 text-green-700 hover:bg-green-200"
-                              : darkMode
-                                ? "bg-gray-800 text-gray-200 hover:bg-gray-700"
-                                : "bg-white text-gray-700 hover:bg-gray-100"
+                          ? "bg-indigo-600 text-white shadow-lg"
+                          : masteredQuestions.has(q.id)
+                            ? darkMode
+                              ? "bg-green-900 text-green-400 hover:bg-green-800"
+                              : "bg-green-100 text-green-700 hover:bg-green-200"
+                            : darkMode
+                              ? "bg-gray-800 text-gray-200 hover:bg-gray-700"
+                              : "bg-white text-gray-700 hover:bg-gray-100"
                           }`}
                       >
                         {actualIndex + 1}
@@ -515,12 +556,12 @@ const App = () => {
                 onClick={nextQuestion}
                 disabled={currentIndex === filteredQuestions.length - 1}
                 className={`px-3 py-3 rounded-lg font-medium flex items-center gap-2 transition-all ${currentIndex === filteredQuestions.length - 1
-                    ? darkMode
-                      ? "bg-gray-700 text-gray-500 cursor-not-allowed"
-                      : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                    : darkMode
-                      ? "bg-gray-800 text-gray-200 shadow hover:shadow-md"
-                      : "bg-white text-gray-700 shadow hover:shadow-md"
+                  ? darkMode
+                    ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  : darkMode
+                    ? "bg-gray-800 text-gray-200 shadow hover:shadow-md"
+                    : "bg-white text-gray-700 shadow hover:shadow-md"
                   }`}
               >
                 <ChevronRight className="w-5 h-5" />
@@ -542,8 +583,8 @@ const App = () => {
   const renderRevision = () => (
     <div
       className={`min-h-screen ${darkMode
-          ? "bg-gradient-to-br from-gray-900 to-gray-800"
-          : "bg-gradient-to-br from-blue-50 to-indigo-100"
+        ? "bg-gradient-to-br from-gray-900 to-gray-800"
+        : "bg-gradient-to-br from-blue-50 to-indigo-100"
         } p-4`}
     >
       <div className="max-w-4xl mx-auto py-8">
@@ -564,8 +605,8 @@ const App = () => {
           <button
             onClick={() => setDarkMode(!darkMode)}
             className={`p-2 rounded-lg ${darkMode
-                ? "bg-gray-800 text-yellow-400"
-                : "bg-white text-indigo-600"
+              ? "bg-gray-800 text-yellow-400"
+              : "bg-white text-indigo-600"
               } shadow hover:shadow-md transition-all`}
           >
             {darkMode ? (
@@ -589,8 +630,8 @@ const App = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className={`w-full pl-10 pr-4 py-2 ${darkMode
-                    ? "bg-gray-700 text-white border-gray-600"
-                    : "bg-gray-50 border-gray-200"
+                  ? "bg-gray-700 text-white border-gray-600"
+                  : "bg-gray-50 border-gray-200"
                   } border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500`}
               />
             </div>
@@ -599,8 +640,8 @@ const App = () => {
                 value={selectedTag}
                 onChange={(e) => setSelectedTag(e.target.value)}
                 className={`px-4 py-2 ${darkMode
-                    ? "bg-gray-700 text-white border-gray-600"
-                    : "bg-gray-50 border-gray-200"
+                  ? "bg-gray-700 text-white border-gray-600"
+                  : "bg-gray-50 border-gray-200"
                   } border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500`}
               >
                 {allTags.map((tag) => (
@@ -612,10 +653,10 @@ const App = () => {
               <button
                 onClick={() => setShowOnlyUnmastered(!showOnlyUnmastered)}
                 className={`px-4 py-2 rounded-lg transition-all flex items-center gap-2 ${showOnlyUnmastered
-                    ? "bg-indigo-600 text-white"
-                    : darkMode
-                      ? "bg-gray-700 text-gray-200"
-                      : "bg-gray-50 text-gray-700"
+                  ? "bg-indigo-600 text-white"
+                  : darkMode
+                    ? "bg-gray-700 text-gray-200"
+                    : "bg-gray-50 text-gray-700"
                   }`}
               >
                 <Filter className="w-4 h-4" />
@@ -654,8 +695,8 @@ const App = () => {
                 <div className="flex justify-between items-center mb-2">
                   <span
                     className={`text-xs font-semibold px-2 py-1 rounded ${darkMode
-                        ? "bg-indigo-900 text-indigo-300"
-                        : "bg-indigo-100 text-indigo-700"
+                      ? "bg-indigo-900 text-indigo-300"
+                      : "bg-indigo-100 text-indigo-700"
                       }`}
                   >
                     Q{q.id}
@@ -664,10 +705,10 @@ const App = () => {
                   {probData && (
                     <span
                       className={`text-sm font-semibold ${probData.score >= 80
-                          ? "text-red-500"
-                          : probData.score >= 60
-                            ? "text-yellow-500"
-                            : "text-gray-400"
+                        ? "text-red-500"
+                        : probData.score >= 60
+                          ? "text-yellow-500"
+                          : "text-gray-400"
                         }`}
                     >
                       {probData.score}% chance
@@ -686,8 +727,8 @@ const App = () => {
                 {/* ANSWER */}
                 <div
                   className={`text-sm leading-relaxed mb-3 p-4 rounded-md ${darkMode
-                      ? "bg-gray-800 text-gray-300 border border-gray-700"
-                      : "bg-gray-50 text-gray-700 border border-gray-200"
+                    ? "bg-gray-800 text-gray-300 border border-gray-700"
+                    : "bg-gray-50 text-gray-700 border border-gray-200"
                     }`}
                 >
                   {q.answer}
@@ -702,8 +743,8 @@ const App = () => {
                       <span
                         key={idx}
                         className={`text-xs px-2 py-1 rounded ${darkMode
-                            ? "bg-gray-700 text-gray-300"
-                            : "bg-gray-100 text-gray-600"
+                          ? "bg-gray-700 text-gray-300"
+                          : "bg-gray-100 text-gray-600"
                           }`}
                       >
                         {tag}
@@ -714,12 +755,12 @@ const App = () => {
                   <button
                     onClick={() => toggleMastered(q.id)}
                     className={`p-1.5 rounded-full ${masteredQuestions.has(q.id)
-                        ? darkMode
-                          ? "bg-green-900 text-green-400"
-                          : "bg-green-100 text-green-600"
-                        : darkMode
-                          ? "bg-gray-700 text-gray-400"
-                          : "bg-gray-100 text-gray-400"
+                      ? darkMode
+                        ? "bg-green-900 text-green-400"
+                        : "bg-green-100 text-green-600"
+                      : darkMode
+                        ? "bg-gray-700 text-gray-400"
+                        : "bg-gray-100 text-gray-400"
                       }`}
                   >
                     <Check className="w-4 h-4" />
