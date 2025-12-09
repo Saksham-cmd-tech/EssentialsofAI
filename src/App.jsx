@@ -496,7 +496,7 @@ const App = () => {
               <button
                 onClick={prevQuestion}
                 disabled={currentIndex === 0}
-                className={`px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-all ${
+                className={`px-3 py-3 rounded-lg font-medium flex items-center gap-2 transition-all ${
                   currentIndex === 0
                     ? darkMode
                       ? "bg-gray-700 text-gray-500 cursor-not-allowed"
@@ -511,9 +511,9 @@ const App = () => {
 
               <div className="flex gap-2">
                 {filteredQuestions
-                  .slice(Math.max(0, currentIndex - 2), currentIndex + 3)
+                  .slice(Math.max(0, currentIndex - 1), currentIndex + 2)
                   .map((q, idx) => {
-                    const actualIndex = Math.max(0, currentIndex - 2) + idx;
+                    const actualIndex = Math.max(0, currentIndex - 1) + idx;
                     return (
                       <button
                         key={q.id}
@@ -542,7 +542,7 @@ const App = () => {
               <button
                 onClick={nextQuestion}
                 disabled={currentIndex === filteredQuestions.length - 1}
-                className={`px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-all ${
+                className={`px-3 py-3 rounded-lg font-medium flex items-center gap-2 transition-all ${
                   currentIndex === filteredQuestions.length - 1
                     ? darkMode
                       ? "bg-gray-700 text-gray-500 cursor-not-allowed"
