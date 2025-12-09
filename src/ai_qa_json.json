@@ -1,0 +1,397 @@
+{
+  "subject": "Essentials of AI - Semester III",
+  "totalQuestions": 65,
+  "questionsAnswered": 19,
+  "qaBank": [
+    {
+      "id": 1,
+      "question": "Why do we store embeddings in a vector database instead of a normal database?",
+      "answer": "Vector databases are optimized for similarity search using mathematical distance metrics (cosine similarity, euclidean distance). Embeddings are high-dimensional numerical vectors (e.g., 1536 dimensions), and finding similar items requires comparing these vectors efficiently. Normal databases are designed for exact matches and relational queries, not for computing similarities between high-dimensional vectors. Vector databases use specialized indexing (like HNSW, IVF) that makes similarity search fast even with millions of vectors.",
+      "tags": ["embeddings", "vector-database", "similarity-search"]
+    },
+    {
+      "id": 2,
+      "question": "Explain the importance of input and output validation when an AI agent calls external tools or functions.",
+      "answer": "Input validation prevents malicious or malformed data from being passed to external tools, which could cause security vulnerabilities, system crashes, or unintended actions (like SQL injection, API abuse). Output validation ensures the tool's response is safe, correctly formatted, and matches expected types before the AI uses it. Without validation, an AI agent might execute harmful commands, access unauthorized data, or make decisions based on corrupted information.",
+      "tags": ["ai-agents", "validation", "security"]
+    },
+    {
+      "id": 3,
+      "question": "How does choosing different models (e.g., gpt-4, gpt-3.5, o1-mini) influence accuracy, speed, and cost?",
+      "answer": "GPT-4: Highest accuracy, best reasoning, slowest speed, most expensive (~10-30x more than GPT-3.5). GPT-3.5: Moderate accuracy, fast responses, cheapest option, good for simple tasks. o1-mini: Optimized for specific reasoning tasks, balanced speed/cost. Larger models have more parameters enabling better understanding but require more computation (slower, costlier). Choose based on task complexity: GPT-4 for complex reasoning, GPT-3.5 for chatbots/simple queries, specialized models for specific domains.",
+      "tags": ["model-selection", "cost", "performance"]
+    },
+    {
+      "id": 4,
+      "question": "Explain the initial stage of how GPT processes input.",
+      "answer": "The initial stage is tokenization: GPT breaks input text into tokens using a tokenizer (like BPE - Byte Pair Encoding). Each token (word, subword, or character) is converted to a numerical ID. These IDs are then mapped to embedding vectors (dense numerical representations). For example, 'Hello world' might become tokens [15496, 995] which are converted to 1536-dimensional vectors that capture semantic meaning.",
+      "tags": ["tokenization", "gpt", "preprocessing"]
+    },
+    {
+      "id": 5,
+      "question": "Explain how intermediate outputs in prompt chaining affect the final answer quality.",
+      "answer": "In prompt chaining, the output of one prompt becomes input for the next. If intermediate outputs contain errors, incomplete information, or hallucinations, these propagate and compound through the chain, degrading final answer quality. Quality intermediate outputs provide accurate context, maintain relevant information, and structure data properly for subsequent steps. Good chaining requires validation between steps to catch and correct errors early.",
+      "tags": ["prompt-chaining", "quality", "error-propagation"]
+    },
+    {
+      "id": 6,
+      "question": "Explain what Large Language Models are and state their purpose.",
+      "answer": "Large Language Models (LLMs) are neural networks with billions of parameters trained on massive text datasets to understand and generate human-like text. Their purpose is to: understand natural language context and meaning, generate coherent contextually relevant text, perform various NLP tasks (translation, summarization, Q&A, coding), capture patterns knowledge and reasoning from training data, and enable human-AI interaction through natural language.",
+      "tags": ["llm", "definition", "purpose"]
+    },
+    {
+      "id": 7,
+      "question": "Why does an LLM need relevant context before answering a question?",
+      "answer": "LLMs are stateless and don't retain memory between requests. Context provides: Disambiguation (understanding what specific information is needed), Grounding (factual basis to prevent hallucination), Personalization (tailoring responses to user needs), Coherence (maintaining consistency with previous conversation), and Specificity (generating accurate relevant answers rather than generic responses). Without context, LLMs might misinterpret questions or generate plausible-sounding but incorrect answers.",
+      "tags": ["context", "llm", "stateless"]
+    },
+    {
+      "id": 8,
+      "question": "Why is the 'role' parameter important in shaping the model's behaviour?",
+      "answer": "The role parameter (system, user, assistant) defines conversation structure and behavior. System role: Sets overarching instructions, personality, constraints, and rules the model must follow. User role: Represents human input/queries. Assistant role: Model's previous responses for conversation history. System role is crucial for defining expertise level, tone, output format, safety guidelines, and task-specific behavior (e.g., 'You are a Python tutor' vs 'You are a creative writer').",
+      "tags": ["role-parameter", "system-prompt", "behavior"]
+    },
+    {
+      "id": 9,
+      "question": "Explain the step-by-step workflow from receiving a prompt to generating output.",
+      "answer": "1. Tokenization: Break input text into tokens. 2. Embedding: Convert tokens to numerical vectors. 3. Positional Encoding: Add position information to maintain word order. 4. Attention Mechanism: Calculate attention scores to identify relationships between tokens. 5. Transformer Layers: Process through multiple layers, refining representations. 6. Prediction: Generate probability distribution over vocabulary for next token. 7. Sampling: Select next token based on temperature/sampling strategy. 8. Decoding: Convert token IDs back to text. 9. Repeat: Continue until end token or max length reached.",
+      "tags": ["workflow", "pipeline", "generation"]
+    },
+    {
+      "id": 10,
+      "question": "How does tokenization help a language model understand text?",
+      "answer": "Tokenization converts variable-length text into fixed-size numerical units that neural networks can process. It: handles unknown words by breaking them into known subwords, reduces vocabulary size (using subwords instead of all possible words), preserves meaning through consistent token boundaries, enables mathematical operations on text, and creates manageable input for embedding layers. Example: 'unhappiness' → ['un', 'happiness'] allows understanding even if 'unhappiness' wasn't in training.",
+      "tags": ["tokenization", "understanding", "subwords"]
+    },
+    {
+      "id": 11,
+      "question": "Provide an example showing how more tokens increase computation.",
+      "answer": "Processing 'Hello' (1 token) vs 'Hello, how are you doing today?' (7 tokens). With attention mechanism (O(n²) complexity): 1 token: 1×1 = 1 attention calculation, 7 tokens: 7×7 = 49 attention calculations. Cost scales quadratically. If processing 1 token costs 1 unit: 100 tokens: 10,000 units of computation, 200 tokens: 40,000 units (4x increase for 2x tokens). More tokens = more memory, longer inference time, higher API costs.",
+      "tags": ["computation", "tokens", "complexity"]
+    },
+    {
+      "id": 12,
+      "question": "Explain the difference between pre-training and fine-tuning and why both are required.",
+      "answer": "Pre-training: Unsupervised learning on massive diverse text datasets (web pages, books), learns general language patterns grammar facts reasoning, creates foundation model understanding language broadly, computationally expensive done once. Fine-tuning: Supervised learning on specific labeled task data, adapts model for particular use cases (customer support, medical Q&A), relatively cheap and quick to perform, specializes general knowledge. Both needed because: Pre-training provides broad language understanding (foundation), fine-tuning adapts it to specific domains/tasks without training from scratch.",
+      "tags": ["pre-training", "fine-tuning", "training"]
+    },
+    {
+      "id": 13,
+      "question": "What is the difference between word-level, subword-level, and character-level tokenization?",
+      "answer": "Word-level: Each complete word is one token (Example: 'running' → ['running']). Pros: Simple, preserves word meaning. Cons: Huge vocabulary, can't handle unseen words. Subword-level: Words split into meaningful chunks using BPE or WordPiece (Example: 'running' → ['run', 'ning']). Pros: Handles rare words, balanced vocabulary size. Cons: More complex tokenization. Character-level: Each character is one token (Example: 'running' → ['r','u','n','n','i','n','g']). Pros: Tiny vocabulary, handles any text. Cons: Very long sequences, loses word-level meaning.",
+      "tags": ["tokenization", "types", "comparison"]
+    },
+    {
+      "id": 14,
+      "question": "Describe how GPT uses attention to identify important parts of text.",
+      "answer": "Attention assigns weights to different tokens based on their relevance to each other. For each token, the model: 1. Creates Query, Key, Value vectors. 2. Computes similarity between Query of current token and Keys of all tokens. 3. Generates attention scores (higher = more relevant). 4. Weights Values by these scores. 5. Combines weighted Values to create context-aware representation. Example: In 'The cat sat on the mat', when processing 'sat', attention focuses heavily on 'cat' (subject) and 'mat' (object) to understand the action's context.",
+      "tags": ["attention", "gpt", "mechanism"]
+    },
+    {
+      "id": 15,
+      "question": "Why do we need to train a language model before using it?",
+      "answer": "Training teaches the model: Language structure (grammar, syntax, semantics), World knowledge (facts, relationships, concepts), Pattern recognition (common phrases, reasoning patterns), Task performance (how to respond appropriately to inputs), and Parameter optimization (adjusting billions of weights). Without training, parameters are random and outputs are meaningless. Training through exposure to billions of text examples enables the model to generate coherent, meaningful, and useful responses.",
+      "tags": ["training", "necessity", "learning"]
+    },
+    {
+      "id": 16,
+      "question": "Define a token and give one example.",
+      "answer": "A token is the basic unit of text that a language model processes—it can be a word, subword, or character depending on the tokenization method used. Example: The sentence 'I don't like rain' might be tokenized as: ['I', 'don', \"'t\", 'like', 'rain'] (5 tokens). Or with different tokenizer: ['I', \"don't\", 'like', 'rain'] (4 tokens). Special characters, punctuation, and spaces can also be separate tokens.",
+      "tags": ["token", "definition", "example"]
+    },
+    {
+      "id": 17,
+      "question": "Why is retrieval-augmented generation (RAG) needed?",
+      "answer": "RAG is needed because: Knowledge cutoff (LLMs only know information from training data which becomes outdated), Hallucination reduction (grounding responses in retrieved documents reduces made-up facts), Domain-specific knowledge (accessing company docs, technical manuals not in training data), Dynamic information (real-time data like stock prices and news not available to static models), Cost efficiency (cheaper than fine-tuning for every knowledge update), and Verifiability (retrieved sources can be cited and checked).",
+      "tags": ["rag", "retrieval", "augmentation"]
+    },
+    {
+      "id": 18,
+      "question": "Explain how GPT generates text token-by-token.",
+      "answer": "GPT uses autoregressive generation: 1. Receives input prompt as context. 2. Predicts probability distribution over entire vocabulary for next token. 3. Samples one token from this distribution (based on temperature). 4. Appends selected token to context. 5. Uses updated context to predict next token. 6. Repeats until: end-of-sequence token, max length reached, or stop sequence encountered. Example: 'The cat' → predicts 'sat' (token) → 'The cat sat' → predicts 'on' → 'The cat sat on'... Each prediction depends on all previous tokens.",
+      "tags": ["generation", "autoregressive", "token-by-token"]
+    },
+    {
+      "id": 19,
+      "question": "What happens when temperature is set to 0?",
+      "answer": "Temperature = 0 makes the model deterministic and greedy: Always selects the highest probability token, produces same output for same input every time, no randomness or creativity, most predictable and conservative responses.",
+      "tags": ["temperature", "deterministic", "sampling"]
+    },
+    {
+      "id": 20,
+      "question": "What are embeddings used for?",
+      "answer": "Embeddings are dense numerical vector representations of text that capture semantic meaning. They are used for: Similarity search (finding related documents or queries), Semantic understanding (representing meaning mathematically), Clustering and classification (grouping similar items), Transfer learning (using pre-trained representations), Recommendation systems (finding similar items), and Input representation for neural networks (converting text to processable format).",
+      "tags": ["embeddings", "usage", "representation"]
+    },
+    {
+      "id": 21,
+      "question": "Explain decoding in language models.",
+      "answer": "Decoding is the process of converting model predictions into text output. Methods include: Greedy decoding (always pick highest probability token - fast but repetitive), Beam search (maintain top-k sequences, explore multiple paths - balanced quality/speed), Sampling (randomly select based on probability distribution - more diverse), Top-k sampling (sample from k most likely tokens), Top-p/nucleus sampling (sample from smallest set with cumulative probability p), Temperature scaling (adjust probability distribution sharpness). Choice affects output quality, diversity, and creativity.",
+      "tags": ["decoding", "generation", "sampling"]
+    },
+    {
+      "id": 22,
+      "question": "Why does increasing model size increase inference time?",
+      "answer": "Larger models have more parameters (weights) that must be: Loaded into memory (more data transfer), Computed through (more matrix multiplications), Processed across more layers (deeper networks), and Stored in GPU/CPU memory (bandwidth limitations). Example: GPT-3 (175B parameters) vs GPT-2 (1.5B parameters) - each forward pass requires 100x more calculations. More parameters = more computation per token = longer inference time. This also increases memory requirements and hardware costs.",
+      "tags": ["model-size", "inference", "performance"]
+    },
+    {
+      "id": 23,
+      "question": "Explain how the OpenAI API manages conversations.",
+      "answer": "The OpenAI API is stateless - it doesn't retain conversation history between requests. To manage conversations: You must send the entire conversation history (all previous messages) with each API call as an array of message objects with roles (system, user, assistant). Each message includes role and content. The API processes the full context to generate responses. This allows: Conversation continuity, context awareness, and multi-turn dialogues. However, you're responsible for: Managing message history, staying within token limits, and truncating old messages if needed.",
+      "tags": ["openai-api", "conversations", "stateless"]
+    },
+    {
+      "id": 24,
+      "question": "Describe how an AI agent uses a perception–decision–action cycle.",
+      "answer": "Perception: Agent receives and processes input from environment (text, sensors, API data) to understand current state. Decision: Agent analyzes perceived information, consults its knowledge/model, evaluates possible actions, and selects optimal response based on goals. Action: Agent executes chosen action (generate response, call tool/API, modify environment). The cycle repeats: Actions change environment, creating new perceptions that trigger new decisions. This enables autonomous behavior, adaptive responses, and goal-directed actions beyond simple input-output mapping.",
+      "tags": ["ai-agents", "perception", "decision-action"]
+    },
+    {
+      "id": 25,
+      "question": "Why does hallucination happen in LLMs?",
+      "answer": "Hallucination occurs when LLMs generate plausible-sounding but incorrect or fabricated information. Causes: Pattern completion (trained to predict next token, may create plausible but false continuations), No ground truth verification (model can't check facts during generation), Training data limitations (gaps, errors, or outdated info in training data), Overconfidence (high probability assigned to incorrect information), Context limitations (insufficient or missing relevant context), and Reward for fluency (optimized for coherent text, not factual accuracy). RAG and fact-checking help mitigate hallucination.",
+      "tags": ["hallucination", "llm", "problems"]
+    },
+    {
+      "id": 26,
+      "question": "How do attention scores influence the next predicted token?",
+      "answer": "Attention scores determine how much each previous token influences the prediction of the next token. High attention scores mean certain tokens are weighted heavily in the context representation used for prediction. Process: 1. Attention mechanism computes scores between current position and all previous positions. 2. Scores are normalized (softmax) to create weights. 3. These weights are applied to value vectors. 4. Weighted sum creates context vector. 5. Context vector feeds into prediction layer to generate probability distribution for next token. Tokens with higher attention contribute more to what gets predicted next.",
+      "tags": ["attention", "scores", "prediction"]
+    },
+    {
+      "id": 27,
+      "question": "Why is context length important for long answers?",
+      "answer": "Context length (context window) is the maximum number of tokens a model can process at once. For long answers it's important because: Insufficient context causes information loss (early parts of conversation are truncated), maintains coherence across long responses, enables reference to earlier information, supports complex multi-step reasoning, and allows comprehensive document understanding. Example: GPT-4 with 8K context vs 32K context - longer window handles entire documents/conversations without truncation. Exceeding context length requires chunking or summarization strategies.",
+      "tags": ["context-length", "window", "limitations"]
+    },
+    {
+      "id": 28,
+      "question": "Explain how model selection and temperature can be combined for accuracy and creativity.",
+      "answer": "Model selection and temperature work together: For accurate, factual tasks: Use GPT-4 (better reasoning) + temperature=0 (deterministic) for consistent correct answers like code generation, technical documentation, factual Q&A. For creative tasks: Use GPT-4 (better quality) + temperature=0.7-1.0 (more random) for diverse creative writing, brainstorming, varied storytelling. For balanced tasks: Use GPT-3.5 (cost-effective) + temperature=0.3-0.5 (slight randomness) for chatbots, general assistance. Combining strong model + appropriate temperature optimizes cost, quality, and output characteristics for specific use cases.",
+      "tags": ["model-selection", "temperature", "optimization"]
+    },
+    {
+      "id": 29,
+      "question": "What is fine-tuning and when do we apply it?",
+      "answer": "Fine-tuning is the process of further training a pre-trained model on a specific, smaller dataset to adapt it for particular tasks or domains. Apply fine-tuning when: You have domain-specific data (medical, legal, technical), need consistent output formatting, require specialized vocabulary or style, want improved performance on specific tasks, or need to embed company/brand voice. Process: Start with pre-trained model, train on labeled examples (100s-1000s), adjust weights slightly to specialize. More efficient than training from scratch. Use cases: Customer support bots, code completion for specific frameworks, industry-specific chatbots.",
+      "tags": ["fine-tuning", "training", "specialization"]
+    },
+    {
+      "id": 30,
+      "question": "Why is input validation important when using external functions?",
+      "answer": "Input validation when calling external functions prevents: Security vulnerabilities (SQL injection, command injection, XSS attacks), system crashes from malformed data, unintended function behavior, data corruption, unauthorized access, resource exhaustion, and API abuse. Validation ensures: Data types match expected formats, values are within acceptable ranges, required parameters are present, suspicious patterns are blocked, and input is sanitized. Example: Validating a file path prevents directory traversal attacks; validating SQL parameters prevents injection. Critical for AI agents that autonomously call tools.",
+      "tags": ["validation", "security", "external-functions"]
+    },
+    {
+      "id": 31,
+      "question": "What is pre-training, and what type of data is used?",
+      "answer": "Pre-training is the initial phase of training where a model learns general language understanding from massive unlabeled datasets. Data used includes: Web pages (Common Crawl, internet text), books and publications, Wikipedia articles, research papers, code repositories (GitHub), social media posts, and news articles. Training is unsupervised (self-supervised) using objectives like: Next token prediction (predict next word), masked language modeling (predict masked words). This creates foundation models with broad knowledge that can be fine-tuned. Requires enormous compute resources and time (weeks/months on thousands of GPUs).",
+      "tags": ["pre-training", "data", "unsupervised"]
+    },
+    {
+      "id": 32,
+      "question": "How does tokenization reduce vocabulary size in LLMs?",
+      "answer": "Tokenization using subword methods (BPE, WordPiece) reduces vocabulary by: Breaking rare/complex words into common subword units, reusing frequent subwords across many words, avoiding need for every possible word in vocabulary. Example: Instead of storing 'running', 'runner', 'run', 'runs' separately (4 vocab entries), store 'run', 'ning', 'ner', 's' (4 subwords that combine for multiple words). This reduces vocab from millions of possible words to 30K-50K tokens while still handling any text through combinations. Smaller vocabulary = less model parameters = more efficient.",
+      "tags": ["tokenization", "vocabulary", "efficiency"]
+    },
+    {
+      "id": 33,
+      "question": "Explain how storing embeddings helps retrieval-based systems.",
+      "answer": "Storing embeddings enables efficient semantic search in retrieval-based systems: Pre-compute embeddings for all documents once, store in vector database with specialized indexing (HNSW, FAISS), convert user query to embedding, find nearest neighbors using distance metrics (cosine similarity) - very fast even with millions of documents, retrieve most relevant documents based on semantic meaning not just keywords. Benefits: Fast similarity search (milliseconds), semantic understanding (finds related concepts not just exact matches), scalability (handles large datasets), and enables RAG systems to provide relevant context to LLMs.",
+      "tags": ["embeddings", "retrieval", "vector-database"]
+    },
+    {
+      "id": 34,
+      "question": "Why does an AI agent require decision logic beyond predictions?",
+      "answer": "AI agents need decision logic beyond LLM predictions because: Predictions provide probabilities/suggestions but don't determine actions, need to evaluate multiple possible actions against goals, must handle tool/function selection and orchestration, require error handling and fallback strategies, need to maintain state and plan multi-step tasks, must enforce safety constraints and validation, and coordinate between perception and action. Decision logic provides: Goal-directed behavior, action selection based on utility/reward, constraint satisfaction, and autonomous operation. Pure prediction (LLM output) isn't sufficient for autonomous agents that must act reliably in complex environments.",
+      "tags": ["ai-agents", "decision-logic", "autonomy"]
+    },
+    {
+      "id": 35,
+      "question": "What advantages does RAG have over model-only memory?",
+      "answer": "RAG advantages over relying solely on model's trained knowledge: Up-to-date information (can access current data beyond training cutoff), verifiable sources (retrieved documents can be cited and checked), domain-specific knowledge (access private/specialized documents not in training), reduced hallucination (grounded in actual retrieved content), dynamic knowledge (easily update knowledge base without retraining), cost-effective (no need to fine-tune for every knowledge update), scalability (handle large knowledge bases), and transparency (show source documents). Model-only memory is static, can hallucinate, and becomes outdated. RAG combines model reasoning with retrieval accuracy.",
+      "tags": ["rag", "advantages", "retrieval"]
+    },
+    {
+      "id": 36,
+      "question": "How does model size affect performance and computational needs?",
+      "answer": "Larger models generally: Better performance (higher accuracy, better reasoning, more coherent output, improved few-shot learning), more world knowledge, better at complex tasks. But require: More computational resources (powerful GPUs/TPUs), longer inference time (more calculations per token), higher memory requirements (must load all parameters), greater energy consumption, and higher API costs. Example: GPT-4 (1.7T parameters) vs GPT-3.5 (175B parameters) - 10x larger means better quality but 10-30x more expensive and slower. Trade-off between capability and efficiency. Choose based on task complexity vs budget/latency requirements.",
+      "tags": ["model-size", "performance", "trade-offs"]
+    },
+    {
+      "id": 37,
+      "question": "Explain prompt chaining.",
+      "answer": "Prompt chaining is breaking complex tasks into sequential steps where output of one prompt becomes input for the next. Process: 1. Decompose complex task into subtasks. 2. Execute first prompt. 3. Use output as context for second prompt. 4. Continue chaining until task complete. Example: Research paper writing: Prompt 1: Generate outline → Prompt 2: Write introduction using outline → Prompt 3: Expand each section → Prompt 4: Create conclusion. Benefits: Handle complex tasks beyond single prompt capability, better quality through focused subtasks, easier debugging, improved reliability. Challenges: Error propagation, requires careful prompt design, more API calls/cost.",
+      "tags": ["prompt-chaining", "workflow", "multi-step"]
+    },
+    {
+      "id": 38,
+      "question": "How can intermediate outputs reduce answer correctness?",
+      "answer": "Intermediate outputs in prompt chains can reduce correctness through: Error propagation (mistakes in early steps compound in later steps), information loss (key details dropped between steps), context drift (meaning changes as summarized/transformed), hallucination accumulation (each step may add false info), format mismatches (output format incompatible with next input), and ambiguity introduction (unclear outputs confuse subsequent prompts). Example: If step 1 extracts wrong date from document, all subsequent analysis using that date will be incorrect. Mitigation: Validate intermediate outputs, use structured formats, include verification steps, maintain key information throughout chain.",
+      "tags": ["prompt-chaining", "errors", "quality"]
+    },
+    {
+      "id": 39,
+      "question": "What are differences between Chat Completions API and Assistants API?",
+      "answer": "Chat Completions API: Stateless (you manage conversation history), simple request-response, you handle all context/memory, single-turn or multi-turn (manual management), direct control over prompts, lower-level control. Assistants API: Stateful (manages conversation threads automatically), built-in memory/context management, supports tools (code interpreter, retrieval, functions), multi-step task planning built-in, persistent threads, higher-level abstraction, automatic message history management. Use Chat Completions for: Custom control, simple integrations, cost optimization. Use Assistants for: Complex workflows, automatic context management, tool use, multi-turn conversations with less code.",
+      "tags": ["api", "chat-completions", "assistants"]
+    },
+    {
+      "id": 40,
+      "question": "Why must we provide relevant reference context to LLMs?",
+      "answer": "Providing relevant context is essential because: LLMs are stateless (no memory between requests), prevents hallucination (grounds responses in facts), enables accurate answers (provides necessary information), maintains conversation coherence, allows personalization (user-specific details), supports domain-specific queries (technical/specialized info), and reduces ambiguity (clarifies what's being asked). Without context, LLMs rely only on training data which may be: Outdated, incomplete for specific query, generic rather than specific, or prone to hallucination. Context ensures responses are relevant, accurate, and grounded in provided information rather than potentially incorrect assumptions.",
+      "tags": ["context", "relevance", "grounding"]
+    },
+    {
+      "id": 41,
+      "question": "Give a character-level tokenization example.",
+      "answer": "Character-level tokenization splits text into individual characters. Example: Input: 'Hello!' Tokens: ['H', 'e', 'l', 'l', 'o', '!'] (6 tokens). Another example: Input: 'AI' Tokens: ['A', 'I'] (2 tokens). Each character including spaces and punctuation becomes a separate token. This results in very long sequences but has tiny vocabulary (typically <100 characters for English) and can handle any text including rare words or typos.",
+      "tags": ["tokenization", "character-level", "example"]
+    },
+    {
+      "id": 42,
+      "question": "Give a word-level tokenization example.",
+      "answer": "Word-level tokenization splits text by words (typically by spaces and punctuation). Example: Input: 'The cat sat on the mat.' Tokens: ['The', 'cat', 'sat', 'on', 'the', 'mat', '.'] (7 tokens). Another example: Input: 'I love AI!' Tokens: ['I', 'love', 'AI', '!'] (4 tokens). Each complete word is one token, punctuation often separate. Simple and intuitive but requires large vocabulary and struggles with unknown/rare words.",
+      "tags": ["tokenization", "word-level", "example"]
+    },
+    {
+      "id": 43,
+      "question": "What is a sub-word tokenizer and why is it popular?",
+      "answer": "Sub-word tokenizer breaks words into smaller meaningful units (morphemes, frequent character sequences). Popular methods: BPE (Byte Pair Encoding), WordPiece, Unigram. Example: 'unhappiness' → ['un', 'happiness'] or ['un', 'happy', 'ness']. Why popular: Handles unknown/rare words (breaks into known pieces), balanced vocabulary size (30K-50K tokens vs millions of words), efficient (shorter sequences than character-level), language-agnostic (works across languages), and captures morphology (prefixes, suffixes, roots). Used by GPT, BERT, most modern LLMs. Optimal trade-off between word-level and character-level tokenization.",
+      "tags": ["tokenization", "subword", "bpe"]
+    },
+    {
+      "id": 44,
+      "question": "Why does storing plain text instead of embeddings reduce search accuracy?",
+      "answer": "Plain text search relies on keyword matching which misses: Semantic similarity (synonyms, related concepts), contextual meaning (same word, different meanings), conceptual relationships (related ideas without shared words), typo/variation tolerance. Example: Query 'automobile problems' wouldn't match document with 'car issues' in keyword search. Embeddings capture semantic meaning in vector space where: Similar concepts are close together (cosine similarity), enables semantic search, finds conceptually related content, handles paraphrasing. Embedding search finds 'car issues' for 'automobile problems' query because embeddings are semantically similar despite different words. More accurate, relevant results.",
+      "tags": ["embeddings", "search", "accuracy"]
+    },
+    {
+      "id": 45,
+      "question": "Explain how attention improves contextual relationships.",
+      "answer": "Attention mechanism allows each token to focus on relevant tokens regardless of position, improving contextual understanding: Identifies dependencies (subject-verb-object relationships), resolves ambiguity (pronoun references, word sense), captures long-range dependencies (references across sentences), weights importance (focus on key information), and enables parallel processing. Example: 'The animal didn't cross the street because it was too tired' - attention helps model understand 'it' refers to 'animal' not 'street' by computing high attention score between 'it' and 'animal'. This creates context-aware representations where each word's meaning is influenced by surrounding relevant words, not just nearby ones.",
+      "tags": ["attention", "context", "relationships"]
+    },
+    {
+      "id": 46,
+      "question": "Why is fine-tuning not useful without pre-training?",
+      "answer": "Fine-tuning without pre-training means training from random initialization on small task-specific dataset. This fails because: Random parameters have no language understanding, small datasets insufficient to learn language from scratch (need billions of examples), no transfer of general knowledge, requires massive compute/time to learn basics, poor generalization to variations. Pre-training provides: Foundation of language understanding, knowledge of grammar/syntax/semantics, world knowledge, general capabilities. Fine-tuning then specializes this foundation. Like teaching advanced math to someone who can't read - need basics first. Pre-training = learning to read, fine-tuning = specializing in poetry.",
+      "tags": ["fine-tuning", "pre-training", "necessity"]
+    },
+    {
+      "id": 47,
+      "question": "Why is temperature important in random text generation?",
+      "answer": "Temperature controls randomness in text generation by adjusting probability distribution: Low temperature (0-0.3): Sharpens distribution, favors high-probability tokens, more deterministic/predictable, less creative, more focused/repetitive. High temperature (0.7-2.0): Flattens distribution, gives low-probability tokens more chance, more random/diverse, more creative, potentially incoherent. Temperature=1.0: Uses unmodified probabilities. Important because: Enables creativity control, balances quality vs diversity, allows task-specific tuning (factual tasks need low, creative tasks need high), prevents repetition or excessive randomness. Formula: probability = exp(logit/temperature).",
+      "tags": ["temperature", "randomness", "generation"]
+    },
+    {
+      "id": 48,
+      "question": "What aspects of an LLM determine contextual understanding?",
+      "answer": "Key aspects determining contextual understanding: Model architecture (attention mechanism, transformer layers), number of parameters (more = better pattern capture), training data quality/diversity, context window size (how much text model sees at once), attention mechanism design (self-attention, cross-attention), positional encoding (understanding word order), layer depth (more layers = more abstract understanding), pre-training objective (masked LM, next token prediction), and embedding dimensionality. Together these allow model to: Capture relationships between words, understand long-range dependencies, resolve ambiguity, maintain coherence, and generate contextually appropriate responses.",
+      "tags": ["llm", "context", "understanding"]
+    },
+    {
+      "id": 49,
+      "question": "How does token cost influence usage cost?",
+      "answer": "Token cost directly determines API usage cost through pricing per token: APIs charge per token (input + output), longer inputs/outputs = more tokens = higher cost. Example pricing: GPT-4: $0.03/1K input tokens, $0.06/1K output tokens. GPT-3.5: $0.0015/1K input tokens, $0.002/1K output tokens. Cost factors: Prompt length (instructions, context), response length, conversation history (accumulates in multi-turn), model choice (GPT-4 20x more than GPT-3.5). Optimization strategies: Use shorter prompts, limit conversation history, choose appropriate model, set max_tokens limits, use prompt caching. Token efficiency crucial for production applications with high volume.",
+      "tags": ["tokens", "cost", "pricing"]
+    },
+    {
+      "id": 50,
+      "question": "Why does more context require more computing?",
+      "answer": "More context increases computation due to: Attention complexity O(n²) where n=context length (each token attends to all others), quadratic growth (2x context = 4x computation), memory requirements scale with context length, more matrix multiplications needed, larger intermediate activations stored. Example: 1K tokens: 1M attention operations, 2K tokens: 4M operations (4x increase). Also affects: Memory bandwidth (moving data), cache usage, GPU utilization. This is why models have context limits (4K, 8K, 32K tokens). Techniques like sparse attention, sliding windows reduce complexity but trade off some capability.",
+      "tags": ["context", "computation", "complexity"]
+    },
+    {
+      "id": 51,
+      "question": "Why is prompt formatting important when using Chat Completions API?",
+      "answer": "Proper prompt formatting ensures: Correct model behavior (role-based instructions work), clear message structure (system/user/assistant separation), consistent outputs, effective use of system prompts for rules/personality, proper conversation flow, token efficiency, and API compatibility. Format: Array of messages with role and content. System role sets behavior, user provides input, assistant shows history. Poor formatting causes: Ignored instructions, confused responses, wasted tokens, inconsistent behavior. Example: System: 'You are helpful assistant' (sets behavior), User: 'Question', Assistant: 'Previous response', User: 'Follow-up'. Structure matters for model understanding and quality.",
+      "tags": ["prompt", "formatting", "api"]
+    },
+    {
+      "id": 52,
+      "question": "How does an AI agent differ from traditional software in autonomy?",
+      "answer": "AI agents vs traditional software: Traditional software: Follows explicit programmed rules, deterministic behavior, requires human decisions for new situations, rule-based branching (if-then), no learning/adaptation, predictable outputs. AI agents: Autonomous decision-making, handles novel situations, uses learned models to choose actions, perception-decision-action loop, adapts based on environment feedback, goal-directed behavior, probabilistic rather than deterministic, can use tools/APIs dynamically. Example: Traditional: 'If temperature>30, turn on AC'. Agent: 'Optimize room comfort considering temperature, humidity, occupancy, energy cost, time of day' - makes nuanced decisions.",
+      "tags": ["ai-agents", "autonomy", "comparison"]
+    },
+    {
+      "id": 53,
+      "question": "Why is storing embeddings beneficial for similarity search?",
+      "answer": "Storing embeddings enables efficient similarity search because: Pre-computed representations (compute once, query many times), mathematical comparison (cosine similarity, dot product - very fast), semantic understanding (finds conceptually similar items), vector database optimization (specialized indexing like HNSW), scales to millions of items (sub-second search), language-agnostic (works across languages if using multilingual embeddings). Example: Store 1M document embeddings, user query embedded once, find 10 most similar in milliseconds using vector math. Alternative (comparing raw text) would require running model 1M times per query - impossibly slow. Embeddings are the foundation of modern semantic search and RAG.",
+      "tags": ["embeddings", "similarity", "search"]
+    },
+    {
+      "id": 54,
+      "question": "Describe retrieval-based learning vs. fine-tuning with a case example.",
+      "answer": "Case: Building customer support chatbot for tech company. Retrieval-based (RAG): Store support docs/FAQs as embeddings, for each query retrieve relevant docs, provide as context to base LLM, model generates answer using retrieved info. Pros: Easy to update (add new docs), no training needed, transparent (show sources), works with latest info. Cons: Depends on retrieval quality, slower (retrieval + generation). Fine-tuning: Train model on thousands of support conversations, model learns company-specific responses. Pros: Fast inference, doesn't need retrieval, embedded knowledge. Cons: Expensive to update (retrain), opaque knowledge, can become outdated. Hybrid: Fine-tune for tone/style, use RAG for facts. RAG better for: Dynamic knowledge, verifiability. Fine-tuning better for: Style, domain-specific reasoning patterns.",
+      "tags": ["rag", "fine-tuning", "comparison"]
+    },
+    {
+      "id": 55,
+      "question": "What happens when more tokens reach context limit?",
+      "answer": "When approaching/exceeding context limit: Truncation required (oldest messages/content dropped), information loss (early context unavailable to model), broken coherence (loses thread of conversation), reference errors (can't access truncated content), API errors (if limit exceeded without handling). Strategies: Sliding window (keep recent messages), summarization (condense old messages), important message retention (keep system prompt, key info), chunking (split long documents), streaming (process in parts). Example: 4K limit, conversation grows to 5K tokens - must drop 1K tokens (usually oldest messages). Model can't reference dropped content. Proper context management crucial for long conversations/documents.",
+      "tags": ["context-limit", "truncation", "management"]
+    },
+    {
+      "id": 56,
+      "question": "How does the Assistants API support multi-step task planning?",
+      "answer": "Assistants API enables multi-step tasks through: Persistent threads (maintains conversation state automatically), built-in tool use (code interpreter, retrieval, functions), automatic context management (handles message history), stateful execution (remembers across steps), run management (tracks task execution status), and file handling (uploads, processes documents). Example multi-step task: 1. User: 'Analyze sales data', 2. Assistant retrieves file, 3. Uses code interpreter to process, 4. Generates visualizations, 5. Provides insights - all within single thread. API orchestrates: Tool selection, execution order, state management, error handling. Higher-level than Chat Completions, built for complex workflows.",
+      "tags": ["assistants-api", "multi-step", "planning"]
+    },
+    {
+      "id": 57,
+      "question": "Why does an LLM need updated real-world data through RAG?",
+      "answer": "LLMs have knowledge cutoff (trained on historical data, e.g., up to Jan 2025). Need RAG for: Current events (news, recent developments), real-time data (stock prices, weather, sports scores), updated facts (current leaders, company info, policy changes), private/proprietary data (company docs, personal files), dynamic information (changing regulations, new research), and domain-specific knowledge (technical docs, manuals). Without RAG: LLM only knows training data (outdated), hallucinates current info, can't access private data. RAG provides: Bridge to current information, grounded responses, verifiable sources, up-to-date accuracy. Essential for production applications needing current/accurate information.",
+      "tags": ["rag", "real-time", "updates"]
+    },
+    {
+      "id": 58,
+      "question": "How does model size affect answer quality?",
+      "answer": "Larger models generally produce better quality through: More parameters = more pattern capacity, better reasoning capabilities, improved few-shot learning, more world knowledge encoded, better handling of complex queries, reduced errors/hallucinations, more coherent long-form text, stronger instruction following. Example: GPT-4 (1.7T parameters) vs GPT-3.5 (175B) - GPT-4 shows: Better logical reasoning, fewer factual errors, more nuanced understanding, better code generation. Diminishing returns: 10x size doesn't mean 10x quality. Trade-offs: Larger = better quality but slower, more expensive. Choose based on: Task complexity, budget, latency requirements. Simple tasks don't need largest models.",
+      "tags": ["model-size", "quality", "performance"]
+    },
+    {
+      "id": 59,
+      "question": "Why should unsafe outputs be validated before tool execution?",
+      "answer": "Validating AI outputs before executing tools prevents: Security breaches (malicious commands), data corruption/loss, unauthorized access, financial loss (unintended transactions), system damage, privacy violations, unintended consequences. Validation checks: Output matches expected format/type, values within safe ranges, no malicious patterns (SQL injection, command injection), authorization/permissions, business logic constraints, rate limits. Example: AI generates SQL query - validate before execution to prevent: DELETE FROM users WHERE 1=1 (catastrophic). Or API call with wrong parameters causing financial charge. AI can make mistakes or be manipulated (prompt injection) - validation is critical safety layer. Never blindly trust and execute AI outputs.",
+      "tags": ["validation", "safety", "tools"]
+    },
+    {
+      "id": 60,
+      "question": "What is the step where GPT converts input text into embeddings?",
+      "answer": "After tokenization, tokens go through the embedding layer which converts token IDs to dense vector representations. Process: 1. Tokenization produces token IDs (integers). 2. Embedding layer (lookup table/matrix) maps each ID to fixed-size vector (e.g., 1536 dimensions for GPT). 3. Each vector represents semantic/syntactic properties of token. 4. Positional encodings added to embeddings (preserve word order). 5. Combined embeddings fed into transformer layers. The embedding layer is learned during training to capture meaning. Similar tokens have similar embedding vectors. This converts discrete tokens into continuous vector space that neural network can process mathematically.",
+      "tags": ["embeddings", "gpt", "pipeline"]
+    },
+    {
+      "id": 61,
+      "question": "Why does a language model require billions of parameters?",
+      "answer": "Billions of parameters needed to: Capture linguistic patterns (grammar, syntax, semantics across languages), encode world knowledge (facts, relationships, concepts), represent nuances (context, subtlety, ambiguity), handle vocabulary diversity (50K+ tokens, each needs representation), store reasoning patterns, model long-range dependencies, and generalize across tasks. Each parameter is a learned weight capturing specific pattern. More parameters = more capacity to learn complex relationships. Example: Smaller models (100M params) handle basic grammar but struggle with reasoning. Larger models (100B+ params) perform complex reasoning, multi-step logic, specialized knowledge. Language is incredibly complex - billions of parameters needed to approximate human-level understanding.",
+      "tags": ["parameters", "model-size", "capacity"]
+    },
+    {
+      "id": 62,
+      "question": "Why is system-role important in defining rules for a model?",
+      "answer": "System role establishes persistent behavioral constraints and instructions that govern all model responses: Sets personality/tone (professional, casual, technical), defines expertise domain (tutor, assistant, expert), establishes output format rules (JSON, markdown, structured), implements safety guardrails, specifies what model should/shouldn't do, and provides context that applies to entire conversation. Unlike user messages (specific queries), system role is: Persistent across conversation, higher priority instructions, defines foundational behavior. Example: System: 'You are a Python tutor. Always provide code examples. Never give complete solutions.' - applies to all subsequent interactions. Critical for: Consistent behavior, safety, task-specific performance, brand voice.",
+      "tags": ["system-role", "instructions", "behavior"]
+    },
+    {
+      "id": 63,
+      "question": "How does GPT decide next token using probability distribution?",
+      "answer": "GPT generates probability distribution over entire vocabulary for next token position: 1. Context (all previous tokens) processed through transformer layers. 2. Final layer outputs logits (raw scores) for each vocabulary token (50K+ values). 3. Softmax converts logits to probabilities (sum to 1.0). 4. Distribution shows likelihood of each token. Example: Given 'The cat sat on the', probabilities might be: 'mat'=0.4, 'floor'=0.25, 'chair'=0.15, others<0.01. 5. Sampling selects token based on: Temperature (controls randomness), top-k (consider only k highest), top-p (nucleus sampling), or greedy (always highest). Selected token appended, process repeats. Probability distribution captures model's uncertainty and enables controlled generation.",
+      "tags": ["probability", "generation", "sampling"]
+    },
+    {
+      "id": 64,
+      "question": "Why does retrieval reduce hallucination?",
+      "answer": "Retrieval reduces hallucination by: Grounding responses in actual source documents (factual basis), providing verifiable information (can check sources), reducing reliance on potentially incorrect training memory, giving model explicit context instead of forcing recall, enabling fact-checking against retrieved content, and showing uncertainty when sources don't contain answer. Without retrieval: Model generates from training memory (may be incorrect/outdated), fills gaps with plausible-sounding fabrications, no source to verify. With retrieval: Model answers based on retrieved documents, if info not in documents can say 'not found', responses anchored to facts. Example: Question about recent event - retrieval finds actual article vs model hallucinating based on similar patterns. RAG dramatically improves factual accuracy.",
+      "tags": ["rag", "hallucination", "accuracy"]
+    },
+    {
+      "id": 65,
+      "question": "Give an example showing increased processing cost when token count doubles.",
+      "answer": "Example with attention mechanism (O(n²) complexity): Scenario: Processing document analysis. Document A: 500 tokens. Attention operations: 500 × 500 = 250,000 operations. Processing time: 0.5 seconds. Cost: $0.01. Document B: 1,000 tokens (2x length). Attention operations: 1,000 × 1,000 = 1,000,000 operations (4x increase). Processing time: 2.0 seconds (4x increase). Cost: $0.04 (4x increase). Key insight: Doubling tokens quadruples computation due to O(n²) attention complexity. Also affects: Memory usage (4x), GPU utilization, API rate limits. This is why context limits exist and why longer contexts cost significantly more. Practical impact: 10K token document costs 16x more than 2.5K token document.",
+      "tags": ["tokens", "cost", "complexity", "example"]
+    }
+  ]
+}
