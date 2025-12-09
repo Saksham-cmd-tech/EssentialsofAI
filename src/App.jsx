@@ -103,7 +103,7 @@ const App = () => {
           : "bg-gradient-to-br from-blue-50 to-indigo-100"
       } flex items-center justify-center p-4`}
     >
-      <div className="fixed bottom-4 right-4 text-sm text-gray-500">
+      <div className="fixed bottom-0 right-4 text-sm text-gray-500">
         Made By Saksham Jineshwar Tale
       </div>
 
